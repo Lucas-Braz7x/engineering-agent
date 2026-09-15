@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "engineering-agent-system"
-version = "0.1.0"
-description = "Engineering Agent System — Phase 0 CLI stub"
+version = "0.2.0"
+description = "Engineering Agent System — CLI and Phase 2 runtime"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
@@ -17,12 +17,18 @@ dependencies = [
 dev = [
   "pytest>=8.0",
 ]
+llm = [
+  "anthropic>=0.39",
+]
 
 [project.scripts]
 engineering-agent = "eas.cli:app"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+eas = ["bundled/**/*.md"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

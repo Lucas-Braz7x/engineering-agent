@@ -34,6 +34,9 @@ def build_report(
     config: ProjectConfig,
     paths: WorkspacePaths,
     draft_status: str,
+    rules_count: int = 0,
+    skills_count: int = 0,
+    has_requirement: bool = False,
 ) -> str:
     title = _requirement_title(paths.requirement_md)
     project_label = config.project_name or "(unknown)"
@@ -45,9 +48,15 @@ def build_report(
         for line in (
             _stack_line(
                 "language",
-                f"{config.language_name} {config.language_version}".strip()
-                if config.language_name
-                else None,
+                " ".join(
+                    part
+                    for part in (
+                        config.language_name,
+                        config.language_version,
+                    )
+                    if part
+                )
+                or None,
             ),
             _stack_line("framework", config.framework_name),
             _stack_line("package_manager", config.package_manager_name),
@@ -69,9 +78,16 @@ def build_report(
     )
     recommendation_block = "Recommendation:\n" + "\n".join(
         (
-            "- Invoke the Architect agent manually (no LLM in this CLI).",
-            "- Prompts: .ai/hosts/prompts.md (architect section)",
-            "- Agent contract: .ai/agents/architect.md",
+            "- Phase 2: engineering-agent analyze --agent architect --prepare",
+            "- Or: analyze --agent architect --invoke (ANTHROPIC_API_KEY + pip install '.[llm]')",
+            "- Manual host: .ai/hosts/prompts.md",
+        )
+    )
+    context_block = "Context:\n" + "\n".join(
+        (
+            f"- rules: {rules_count} file(s)",
+            f"- skills: {skills_count} file(s)",
+            f"- requirement: {'present' if has_requirement else 'missing'}",
         )
     )
 
@@ -79,6 +95,7 @@ def build_report(
         f"EAS analyze v{version}",
         f"Project: {project_label}",
         stack_block,
+        context_block,
         workspace_block,
         recommendation_block,
         f"Draft: {draft_status}",

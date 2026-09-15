@@ -31,10 +31,10 @@ def test_analyze_success(tmp_path: Path):
     assert "EAS analyze" in result.stdout
     assert "Recommendation:" in result.stdout
     assert "Draft: not requested" in result.stdout
+    assert "Context:" in result.stdout
     assert "requirement: .ai/workspace/requirement.md" in result.stdout
     assert "architecture: .ai/workspace/architecture.md" in result.stdout
-    assert "prompts.md" in result.stdout
-    assert "architect.md" in result.stdout
+    assert "--agent architect --prepare" in result.stdout
 
 
 def test_analyze_invalid_project_yaml_exit_1(tmp_path: Path):
@@ -52,7 +52,7 @@ def test_analyze_invalid_project_yaml_exit_1(tmp_path: Path):
 def test_cli_version():
     result = runner.invoke(app, ["--version"])
     assert result.exit_code == 0
-    assert result.stdout.strip() == "0.1.0"
+    assert result.stdout.strip() == "0.2.0"
 
 
 def test_analyze_write_draft(tmp_path: Path):
