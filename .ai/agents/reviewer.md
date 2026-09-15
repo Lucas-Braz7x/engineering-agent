@@ -19,6 +19,7 @@ Você é direto: cada finding deve ser acionável. Elogios são opcionais e brev
 |------------|--------|
 | Obrigatório | Diff ou lista de arquivos alterados (`git diff`, branch, ou arquivos indicados pelo usuário) |
 | Se existir | `.ai/workspace/architecture.md` (verificar aderência) |
+| Se existir | `.ai/workspace/test-plan.md` (cobertura vs plano do Tester) |
 | Se existir | `.ai/project.yaml` (comandos de test/lint) |
 | Se existir | `.ai/rules/*.md` |
 | Recomendado | Resultado de testes/lint se o usuário colar ou estiver em CI |

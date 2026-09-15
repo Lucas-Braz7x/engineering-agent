@@ -34,6 +34,20 @@ Deliver the full artifact and write it to .ai/workspace/code-review.md (include 
 
 ---
 
+## tester
+
+```text
+You are running the EAS agent "tester". Follow every instruction in .ai/agents/tester.md.
+
+Use the current git diff (or the files I specify) plus .ai/workspace/requirement.md and .ai/workspace/architecture.md.
+Read .ai/project.yaml and .ai/rules/testing.md if they exist.
+
+Deliver the full artifact and write it to .ai/workspace/test-plan.md (include the eas-artifact YAML block at the end).
+Do not implement test code unless I explicitly ask after the plan is saved.
+```
+
+---
+
 ## feature (workflow Phase 0)
 
 ```text
@@ -42,5 +56,6 @@ We are executing .ai/workflows/feature.md (Phase 0, manual mode).
 1) Confirm you read .ai/workspace/requirement.md (or ask me to fill it).
 2) Run the architect agent (.ai/agents/architect.md) and save .ai/workspace/architecture.md.
 3) Stop and ask for my explicit approval before any implementation.
-4) After I implement and notify you, run the reviewer agent (.ai/agents/reviewer.md) on the current diff and save .ai/workspace/code-review.md.
+4) After I implement and notify you, run the tester agent (.ai/agents/tester.md) on the current diff and save .ai/workspace/test-plan.md.
+5) Run the reviewer agent (.ai/agents/reviewer.md) on the current diff; use test-plan.md for testing coverage; save .ai/workspace/code-review.md.
 ```
