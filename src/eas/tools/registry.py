@@ -7,6 +7,10 @@ from eas.tools.git_tools import git_diff, git_log, git_status
 from eas.tools.models import ToolContext, ToolResult
 from eas.tools.shell import run_command
 from eas.tools.tests_tool import run_tests
+from eas.integrations.aws_tool import aws_caller_identity
+from eas.integrations.ci_tool import ci_github_runs, ci_list_workflow_files
+from eas.integrations.docker_tool import docker_compose_config, docker_compose_ps
+from eas.integrations.github_tool import github_pr_view, github_remote_url
 
 ToolFn = Callable[[ToolContext], ToolResult]
 
@@ -20,6 +24,13 @@ TOOL_CATALOG: dict[str, str] = {
     "git_diff": "git diff (default: unstaged/staged vs HEAD)",
     "git_status": "git status --short --branch",
     "git_log": "git log --oneline",
+    "github_remote": "git remote URL for configured GitHub remote",
+    "github_pr_view": "gh pr view (JSON summary; optional PR number)",
+    "docker_compose_ps": "docker compose ps for project compose file",
+    "docker_compose_services": "List compose service names",
+    "aws_caller_identity": "aws sts get-caller-identity (read-only)",
+    "ci_workflow_files": "List .github/workflows/*.yml",
+    "ci_github_runs": "gh run list (recent CI runs)",
 }
 
 
@@ -57,4 +68,19 @@ def execute(ctx: ToolContext, name: str, **kwargs) -> ToolResult:
             base=kwargs.get("base"),
             head=kwargs.get("head"),
         )
+    if name == "github_remote":
+        return github_remote_url(ctx)
+    if name == "github_pr_view":
+        pr = kwargs.get("pr_number")
+        return github_pr_view(ctx, pr_number=int(pr) if pr is not None else None)
+    if name == "docker_compose_ps":
+        return docker_compose_ps(ctx)
+    if name == "docker_compose_services":
+        return docker_compose_config(ctx)
+    if name == "aws_caller_identity":
+        return aws_caller_identity(ctx)
+    if name == "ci_workflow_files":
+        return ci_list_workflow_files(ctx)
+    if name == "ci_github_runs":
+        return ci_github_runs(ctx, limit=int(kwargs.get("limit", 5)))
     return ToolResult(ok=False, output="", error=f"Unknown tool: {name}")
