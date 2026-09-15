@@ -85,6 +85,40 @@ engineering-agent tools run "pytest -q"
 
 Ver [`.ai/PHASE-3.md`](.ai/PHASE-3.md).
 
+**Phase 4 (workflows):** requer `[llm]` + `ANTHROPIC_API_KEY` para `--invoke`.
+
+```bash
+engineering-agent feature --prepare --step architect
+engineering-agent feature --invoke --step architect --force
+engineering-agent feature --invoke --all --assume-approved --force
+engineering-agent review --invoke --force --git-base main --git-head HEAD
+engineering-agent bug "error details" --invoke --step debugger --force
+engineering-agent status
+```
+
+Ver [`.ai/PHASE-4.md`](.ai/PHASE-4.md).
+
+**Phase 5 (autonomous loop):**
+
+```bash
+engineering-agent loop
+engineering-agent loop --invoke-agents --suggest-fix --force
+```
+
+Limites em `.ai/project.yaml` → `limits:`. Ver [`.ai/PHASE-5.md`](.ai/PHASE-5.md).
+
+**Phase 6 (integrations):**
+
+```bash
+engineering-agent integrations status
+engineering-agent integrations github
+engineering-agent integrations docker
+engineering-agent integrations aws
+engineering-agent integrations ci
+```
+
+Config opcional: `integrations:` em `.ai/project.yaml`. Ver [`.ai/PHASE-6.md`](.ai/PHASE-6.md).
+
 Example output sections: `EAS analyze`, `Project`, `Stack`, `Context`, `Workspace`, `Recommendation`, `Draft`.
 
 Phase 2 runtime: [`.ai/PHASE-2.md`](.ai/PHASE-2.md). Manual host fallback: [`.ai/hosts/prompts.md`](.ai/hosts/prompts.md).
@@ -119,6 +153,9 @@ Also detects Git, Docker, and databases from `docker-compose.yml`.
 | 3 | `.ai/project.yaml` already exists (`init` without `--force`) |
 | 4 | Agent prepare/invoke failed (missing agent, artifact exists, no API key, etc.) |
 | 5 | Tool command failed (`tools` subcommands) |
+| 6 | Workflow failed (`feature` / `review` / `bug`) |
+| 7 | Loop ended without success (`loop`) |
+| 8 | Integration CLI/tool failed (`integrations`, tools `github_*` / `docker_*` / `aws_*` / `ci_*`) |
 
 ## Tests
 

@@ -4,7 +4,7 @@
 id: feature
 version: 0.2.0
 phase: 0
-mode: manual  # Cursor | Claude Code | … + Markdown; sem orquestração CLI
+mode: manual  # Cursor | Claude Code | …; CLI Phase 4: engineering-agent feature
 ```
 
 Orquestração **manual** para validar o processo antes do runtime Python. Cada passo indica agente, entradas e artefato.
