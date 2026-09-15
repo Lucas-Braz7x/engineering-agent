@@ -2,7 +2,7 @@
 
 Agentes e workflows executados **manualmente** no **Cursor**, **Claude Code** ou outro host com acesso ao repo.
 
-Documentação do produto: [doc.md](../doc.md).
+Documentação do produto: [doc.md](../doc.md) · **Phase 0 concluída:** [PHASE-0.md](PHASE-0.md)
 
 ## Começar
 
@@ -19,11 +19,20 @@ Documentação do produto: [doc.md](../doc.md).
 | Cursor | `.cursor/rules/eas.mdc` |
 | Claude Code | `CLAUDE.md` |
 
-## Agentes
+## Agentes (Phase 0)
 
 | Agente | Definição | Artefato |
 |--------|-----------|----------|
 | Architect | [agents/architect.md](agents/architect.md) | `workspace/architecture.md` |
+| Tester | [agents/tester.md](agents/tester.md) | `workspace/test-plan.md` |
 | Reviewer | [agents/reviewer.md](agents/reviewer.md) | `workspace/code-review.md` |
+
+## Rules
+
+| Rule | Path |
+|------|------|
+| Architecture | [rules/architecture.md](rules/architecture.md) |
+| Coding | [rules/coding.md](rules/coding.md) |
+| Testing | [rules/testing.md](rules/testing.md) |
 
 Definições de agente são **agnósticas de IDE**; hosts só mudam como anexar contexto.
