@@ -31,6 +31,28 @@ def test_analyze_success(tmp_path: Path):
     assert "EAS analyze" in result.stdout
     assert "Recommendation:" in result.stdout
     assert "Draft: not requested" in result.stdout
+    assert "requirement: .ai/workspace/requirement.md" in result.stdout
+    assert "architecture: .ai/workspace/architecture.md" in result.stdout
+    assert "prompts.md" in result.stdout
+    assert "architect.md" in result.stdout
+
+
+def test_analyze_invalid_project_yaml_exit_1(tmp_path: Path):
+    ai = tmp_path / ".ai"
+    ai.mkdir()
+    invalid = Path(__file__).parent / "fixtures" / "project_yaml" / "invalid.yaml"
+    (ai / "project.yaml").write_text(invalid.read_text(encoding="utf-8"), encoding="utf-8")
+    (ai / "workspace").mkdir()
+
+    result = runner.invoke(app, ["analyze", "--path", str(tmp_path)])
+    assert result.exit_code == 1
+    assert "Invalid YAML" in result.stderr or "Invalid YAML" in result.stdout
+
+
+def test_cli_version():
+    result = runner.invoke(app, ["--version"])
+    assert result.exit_code == 0
+    assert result.stdout.strip() == "0.1.0"
 
 
 def test_analyze_write_draft(tmp_path: Path):

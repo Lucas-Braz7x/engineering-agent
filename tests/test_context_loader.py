@@ -28,3 +28,14 @@ def test_load_missing_file(tmp_path: Path):
 def test_load_invalid_yaml():
     with pytest.raises(ProjectConfigError, match="Invalid YAML"):
         load_project_config(FIXTURES / "invalid.yaml")
+
+
+def test_load_empty_yaml():
+    config = load_project_config(FIXTURES / "empty.yaml")
+    assert config.project_name is None
+    assert config.language_name is None
+
+
+def test_load_non_mapping_root():
+    with pytest.raises(ProjectConfigError, match="mapping"):
+        load_project_config(FIXTURES / "list_root.yaml")
