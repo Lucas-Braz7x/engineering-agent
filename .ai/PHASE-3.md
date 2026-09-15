@@ -8,6 +8,7 @@ Critério do [roadmap](../docs/roadmap.md): filesystem, shell, git, tests — AP
 |------|--------|-----|
 | `read_file` | `eas/tools/filesystem.py` | `tools read-file` |
 | `write_file` | `eas/tools/filesystem.py` | `tools write-file --content` |
+| `write_artifact` | `eas/tools/filesystem.py` | `tools --agent <id> write-artifact --content` |
 | `search_code` | `eas/tools/filesystem.py` | `tools search-code` |
 | `run_command` | `eas/tools/shell.py` | `tools run` |
 | `run_tests` | `eas/tools/tests_tool.py` | `tools run-tests` |
@@ -15,7 +16,7 @@ Critério do [roadmap](../docs/roadmap.md): filesystem, shell, git, tests — AP
 | `git_status` | `eas/tools/git_tools.py` | `tools git-status` |
 | `git_log` | `eas/tools/git_tools.py` | `tools git-log` |
 
-Programático: `eas.tools.execute(ToolContext, name, **kwargs)`.
+Programático: `eas.tools.execute(ToolContext, name, agent=manifest, **kwargs)` (Phase 7: `agent` aplica política de role).
 
 ## Segurança (MVP)
 

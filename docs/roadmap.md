@@ -11,3 +11,5 @@
 | **4** | Workflows | `feature`, `bug`, `review` — ver [`.ai/PHASE-4.md`](../.ai/PHASE-4.md) ✅ |
 | **5** | Autonomous Loop | `engineering-agent loop` — ver [`.ai/PHASE-5.md`](../.ai/PHASE-5.md) ✅ |
 | **6** | Integrações | GitHub, AWS, Docker, CI/CD — ver [`.ai/PHASE-6.md`](../.ai/PHASE-6.md) ✅ |
+| **7** | Role boundaries | Tool policy por agente, `write_artifact`, validação — ver [`.ai/PHASE-7.md`](../.ai/PHASE-7.md) ✅ |
+| **8** | Context System | SQLite `.eas/eas.db`, memórias curadas, busca, retenção — ver [`.ai/PHASE-8.md`](../.ai/PHASE-8.md) ✅ |

@@ -71,6 +71,28 @@ engineering-agent --version
 
 **Phase 2 (`--invoke`):** requer `pip install -e ".[llm]"` e `ANTHROPIC_API_KEY`. Modelo opcional: `EAS_ANTHROPIC_MODEL`.
 
+**Skill — construir agentes:** [`.ai/skills/agent-builder/SKILL.md`](.ai/skills/agent-builder/SKILL.md) (templates + checklist; agentes como sistema com tools, limites e avaliação).
+
+**Phase 8 (context store):**
+
+```bash
+engineering-agent context status
+engineering-agent memory add "This project uses Zod for validation"
+engineering-agent context search zod
+```
+
+Persistent state in `.eas/eas.db` (see [`.ai/PHASE-8.md`](.ai/PHASE-8.md)).
+
+**Phase 7 (role boundaries):**
+
+```bash
+engineering-agent agent show architect
+engineering-agent tools --agent architect list
+engineering-agent tools --agent architect write-artifact --content "# ..."
+```
+
+Tool policy is enforced in code when `--agent` is set (see [`.ai/PHASE-7.md`](.ai/PHASE-7.md)).
+
 **Phase 3 (tools):**
 
 ```bash
@@ -119,7 +141,7 @@ engineering-agent integrations ci
 
 Config opcional: `integrations:` em `.ai/project.yaml`. Ver [`.ai/PHASE-6.md`](.ai/PHASE-6.md).
 
-Example output sections: `EAS analyze`, `Project`, `Stack`, `Context`, `Workspace`, `Recommendation`, `Draft`.
+Saída do `analyze` (em pt-BR): `Análise EAS`, `Projeto`, `Propósito`, `Stack técnica`, `Contexto carregado`, `Workspace EAS`, `Próximos passos`, `Rascunho de arquitetura`. O propósito usa `project.description`, README, manifests e `requirement.md` (seções Problema / História de usuário / Resumo — sem LLM).
 
 Phase 2 runtime: [`.ai/PHASE-2.md`](.ai/PHASE-2.md). Manual host fallback: [`.ai/hosts/prompts.md`](.ai/hosts/prompts.md).
 

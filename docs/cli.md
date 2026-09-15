@@ -8,6 +8,12 @@ engineering-agent init --dry-run
 engineering-agent analyze
 engineering-agent analyze --agent architect --prepare
 engineering-agent analyze --agent architect --invoke
+engineering-agent context status
+engineering-agent memory add "Uses Zod for validation"
+engineering-agent context search zod
+engineering-agent agent show architect
+engineering-agent agent validate architect .ai/workspace/architecture.md
+engineering-agent tools --agent architect list
 engineering-agent tools list
 engineering-agent tools read-file README.md
 engineering-agent tools git-diff --base main --head HEAD
