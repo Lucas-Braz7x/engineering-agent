@@ -18,6 +18,7 @@ Cada projeto possui contexto próprio:
 ```yaml
 project:
   name: file-uploader
+  description: Optional one-line summary of what the project is for (shown by analyze)
 
 language:
   name: typescript

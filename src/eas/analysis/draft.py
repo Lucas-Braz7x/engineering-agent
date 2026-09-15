@@ -21,8 +21,8 @@ Requirement: `.ai/workspace/requirement.md`
 def write_minimal_draft(paths: WorkspacePaths) -> str:
     """Write a minimal architecture stub if missing. Returns draft status label."""
     if paths.architecture_md.is_file():
-        return "skipped (exists)"
+        return "ignorado (já existe)"
 
     paths.architecture_md.parent.mkdir(parents=True, exist_ok=True)
     paths.architecture_md.write_text(DRAFT_TEMPLATE, encoding="utf-8")
-    return "created"
+    return "criado"

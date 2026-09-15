@@ -13,9 +13,9 @@ def test_build_report_empty_config_stack_placeholder(tmp_path: Path):
         version="0.0.0",
         config=ProjectConfig(),
         paths=paths,
-        draft_status="not requested",
+        draft_status="não solicitado",
     )
-    assert "(no stack fields in project.yaml)" in report
+    assert "(nenhum campo de stack em project.yaml)" in report
 
 
 def test_build_report_empty_project_yaml_via_analyze(tmp_path: Path):
@@ -30,4 +30,4 @@ def test_build_report_empty_project_yaml_via_analyze(tmp_path: Path):
 
     result = CliRunner().invoke(app, ["analyze", "--path", str(tmp_path)])
     assert result.exit_code == 0
-    assert "(no stack fields in project.yaml)" in result.stdout
+    assert "(nenhum campo de stack em project.yaml)" in result.stdout

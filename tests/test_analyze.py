@@ -28,12 +28,12 @@ def test_analyze_success(tmp_path: Path):
     _write_minimal_project(tmp_path)
     result = runner.invoke(app, ["analyze", "--path", str(tmp_path)])
     assert result.exit_code == 0
-    assert "EAS analyze" in result.stdout
-    assert "Recommendation:" in result.stdout
-    assert "Draft: not requested" in result.stdout
-    assert "Context:" in result.stdout
-    assert "requirement: .ai/workspace/requirement.md" in result.stdout
-    assert "architecture: .ai/workspace/architecture.md" in result.stdout
+    assert "Análise EAS" in result.stdout
+    assert "Próximos passos:" in result.stdout
+    assert "Rascunho de arquitetura: não solicitado" in result.stdout
+    assert "Contexto carregado:" in result.stdout
+    assert "requisito: .ai/workspace/requirement.md" in result.stdout
+    assert "arquitetura: .ai/workspace/architecture.md" in result.stdout
     assert "--agent architect --prepare" in result.stdout
 
 
@@ -52,7 +52,7 @@ def test_analyze_invalid_project_yaml_exit_1(tmp_path: Path):
 def test_cli_version():
     result = runner.invoke(app, ["--version"])
     assert result.exit_code == 0
-    assert result.stdout.strip() == "0.6.0"
+    assert result.stdout.strip() == "0.8.0"
 
 
 def test_analyze_write_draft(tmp_path: Path):
@@ -62,13 +62,13 @@ def test_analyze_write_draft(tmp_path: Path):
 
     result = runner.invoke(app, ["analyze", "--path", str(tmp_path), "--write-draft"])
     assert result.exit_code == 0
-    assert "Draft: created" in result.stdout
+    assert "Rascunho de arquitetura: criado" in result.stdout
     assert arch.is_file()
     assert "architect" in arch.read_text(encoding="utf-8").lower()
 
     result2 = runner.invoke(app, ["analyze", "--path", str(tmp_path), "--write-draft"])
     assert result2.exit_code == 0
-    assert "Draft: skipped (exists)" in result2.stdout
+    assert "Rascunho de arquitetura: ignorado (já existe)" in result2.stdout
 
 
 def test_find_repo_root_from_subdirectory(tmp_path: Path):
@@ -77,4 +77,4 @@ def test_find_repo_root_from_subdirectory(tmp_path: Path):
     sub.mkdir(parents=True)
     result = runner.invoke(app, ["analyze", "--path", str(sub)])
     assert result.exit_code == 0
-    assert "Project: demo" in result.stdout
+    assert "Projeto: demo" in result.stdout

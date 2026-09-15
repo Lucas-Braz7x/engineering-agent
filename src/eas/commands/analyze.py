@@ -6,6 +6,7 @@ import typer
 
 from eas import __version__
 from eas.analysis.draft import write_minimal_draft
+from eas.analysis.purpose import gather_project_purpose
 from eas.analysis.report import build_report
 from eas.context.loader import ProjectConfigError, load_project_config
 from eas.context.paths import find_repo_root, workspace_paths
@@ -79,8 +80,13 @@ def run_analyze(
     if write_draft:
         draft_status = write_minimal_draft(paths)
     else:
-        draft_status = "not requested"
+        draft_status = "não solicitado"
 
+    purpose = gather_project_purpose(
+        root,
+        paths,
+        context.requirement_text,
+    )
     report = build_report(
         version=__version__,
         config=config,
@@ -89,6 +95,7 @@ def run_analyze(
         rules_count=len(context.rules),
         skills_count=len(context.skills),
         has_requirement=context.requirement_text is not None,
+        purpose=purpose,
     )
     typer.echo(report, nl=False)
     return EXIT_OK
