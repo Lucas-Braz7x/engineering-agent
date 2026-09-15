@@ -4,7 +4,7 @@
 
 | Fase | Nome | Entregas principais |
 |------|------|---------------------|
-| **0** | Agent System | Só Markdown: Architect, Reviewer, Tester + workflow Feature — validar o processo |
+| **0** | Agent System | Markdown: Architect, Tester, Reviewer + workflow Feature — ver [`.ai/PHASE-0.md`](../.ai/PHASE-0.md) |
 | **1** | Project Detection | `engineering-agent init` → detectar stack → `.ai/project.yaml` |
 | **2** | Python CLI | Core: `analyze` — load context, rules, skills, invoke agent, save artifact |
 | **3** | Tools | filesystem, shell, git, tests |
