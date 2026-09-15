@@ -5,6 +5,7 @@ from pathlib import Path
 import yaml
 
 from eas.runtime.models import AgentManifest, EASContext
+from eas.tools.registry import list_tools
 
 
 def _project_yaml_dump(context: EASContext) -> str:
@@ -73,6 +74,22 @@ def build_invoke_prompt(*, context: EASContext, agent: AgentManifest) -> str:
         "## Agent definition (full)",
         "",
         agent.definition_text.rstrip(),
+        "",
+        "## Tools (Phase 3 CLI)",
+        "",
+        "The human or automated runtime can gather repo context with:",
+        "",
+        "```bash",
+        "engineering-agent tools list",
+        "engineering-agent tools read-file <path>",
+        "engineering-agent tools search-code '<regex>'",
+        "engineering-agent tools git-diff --base main --head HEAD",
+        "engineering-agent tools run-tests",
+        "```",
+        "",
+        "Registered:",
+        "",
+        "\n".join(f"- `{name}` — {desc}" for name, desc in list_tools()),
         "",
     ]
     return "\n".join(body) + "\n"
