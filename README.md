@@ -71,6 +71,20 @@ engineering-agent --version
 
 **Phase 2 (`--invoke`):** requer `pip install -e ".[llm]"` e `ANTHROPIC_API_KEY`. Modelo opcional: `EAS_ANTHROPIC_MODEL`.
 
+**Phase 3 (tools):**
+
+```bash
+engineering-agent tools list
+engineering-agent tools read-file README.md
+engineering-agent tools search-code 'def analyze' --glob '**/*.py'
+engineering-agent tools git-status
+engineering-agent tools git-diff --base main --head HEAD
+engineering-agent tools run-tests
+engineering-agent tools run "pytest -q"
+```
+
+Ver [`.ai/PHASE-3.md`](.ai/PHASE-3.md).
+
 Example output sections: `EAS analyze`, `Project`, `Stack`, `Context`, `Workspace`, `Recommendation`, `Draft`.
 
 Phase 2 runtime: [`.ai/PHASE-2.md`](.ai/PHASE-2.md). Manual host fallback: [`.ai/hosts/prompts.md`](.ai/hosts/prompts.md).
@@ -104,6 +118,7 @@ Also detects Git, Docker, and databases from `docker-compose.yml`.
 | 2 | Missing `.ai/project.yaml` (`analyze`) |
 | 3 | `.ai/project.yaml` already exists (`init` without `--force`) |
 | 4 | Agent prepare/invoke failed (missing agent, artifact exists, no API key, etc.) |
+| 5 | Tool command failed (`tools` subcommands) |
 
 ## Tests
 
