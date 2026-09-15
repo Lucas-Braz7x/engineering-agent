@@ -1,0 +1,18 @@
+project:
+  name: engineering-agent-system
+
+language:
+  name: python
+  version: "3.11"
+
+framework:
+  name: typer
+
+package_manager:
+  name: pip
+
+testing:
+  command: pytest
+
+build:
+  command: pip install -e ".[dev]"
