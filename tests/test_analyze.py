@@ -52,7 +52,7 @@ def test_analyze_invalid_project_yaml_exit_1(tmp_path: Path):
 def test_cli_version():
     result = runner.invoke(app, ["--version"])
     assert result.exit_code == 0
-    assert result.stdout.strip() == "0.3.0"
+    assert result.stdout.strip() == "0.6.0"
 
 
 def test_analyze_write_draft(tmp_path: Path):

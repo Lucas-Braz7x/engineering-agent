@@ -112,7 +112,7 @@ def analyze(
     agent: str | None = typer.Option(
         None,
         "--agent",
-        help="EAS agent to run: architect, tester, or reviewer.",
+        help="EAS agent to run: architect, tester, reviewer, or debugger.",
     ),
     prepare: bool = typer.Option(
         False,

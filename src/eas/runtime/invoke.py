@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Sequence
 from pathlib import Path
 
 from eas.runtime.llm import InvokeError, complete_agent
@@ -30,9 +31,9 @@ def run_invoke(
     agent_id: str,
     force: bool = False,
     run_id: str | None = None,
+    extra_sections: Sequence[tuple[str, str]] = (),
 ) -> InvokeResult:
     prepared = run_prepare(root=root, agent_id=agent_id, run_id=run_id)
-    context = load_eas_context(root)
     agent = load_agent(root, agent_id)
 
     artifact_path = prepared.artifact_path
@@ -42,6 +43,8 @@ def run_invoke(
         )
 
     prompt = prepared.invoke_path.read_text(encoding="utf-8")
+    for title, body in extra_sections:
+        prompt += f"\n## {title}\n\n{body.rstrip()}\n"
     system = (
         f"You are the EAS {agent.id} agent. Output only the artifact markdown "
         f"(with eas-artifact YAML footer). No preamble."

@@ -7,6 +7,9 @@ from typing import Any
 import yaml
 from yaml import YAMLError
 
+from eas.context.integrations_config import IntegrationsConfig, parse_integrations
+from eas.context.limits import LoopLimits, parse_limits
+
 
 class ProjectConfigError(Exception):
     """Failed to load or parse project configuration."""
@@ -22,6 +25,8 @@ class ProjectConfig:
     database_name: str | None = None
     testing_command: str | None = None
     build_command: str | None = None
+    limits: LoopLimits | None = None
+    integrations: IntegrationsConfig | None = None
 
 
 def _nested_str(data: dict[str, Any], *keys: str) -> str | None:
@@ -48,6 +53,8 @@ def _parse_config(data: Any) -> ProjectConfig:
         database_name=_nested_str(data, "database", "name"),
         testing_command=_nested_str(data, "testing", "command"),
         build_command=_nested_str(data, "build", "command"),
+        limits=parse_limits(data),
+        integrations=parse_integrations(data),
     )
 
 

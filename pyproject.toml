@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "engineering-agent-system"
-version = "0.3.0"
-description = "Engineering Agent System — CLI, runtime, and Phase 3 tools"
+version = "0.6.0"
+description = "Engineering Agent System — CLI through Phase 5 autonomous loop"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
