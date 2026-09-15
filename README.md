@@ -62,14 +62,18 @@ engineering-agent init                      # detect stack → .ai/project.yaml
 engineering-agent init --dry-run            # preview detection only
 engineering-agent init --force              # overwrite existing project.yaml
 engineering-agent analyze
+engineering-agent analyze --agent architect --prepare   # Phase 2: bundle em .ai/workspace/runs/
+engineering-agent analyze --agent architect --invoke    # Phase 2: LLM → artefato (ver abaixo)
 engineering-agent analyze --path /path/to/repo
 engineering-agent analyze --write-draft     # minimal architecture.md if missing
 engineering-agent --version
 ```
 
-Example output sections: `EAS analyze`, `Project`, `Stack`, `Workspace`, `Recommendation`, `Draft`.
+**Phase 2 (`--invoke`):** requer `pip install -e ".[llm]"` e `ANTHROPIC_API_KEY`. Modelo opcional: `EAS_ANTHROPIC_MODEL`.
 
-To produce a full architecture document, invoke the **architect** agent in Cursor or Claude Code using [`.ai/hosts/prompts.md`](.ai/hosts/prompts.md).
+Example output sections: `EAS analyze`, `Project`, `Stack`, `Context`, `Workspace`, `Recommendation`, `Draft`.
+
+Phase 2 runtime: [`.ai/PHASE-2.md`](.ai/PHASE-2.md). Manual host fallback: [`.ai/hosts/prompts.md`](.ai/hosts/prompts.md).
 
 ## Project context
 
@@ -99,6 +103,7 @@ Also detects Git, Docker, and databases from `docker-compose.yml`.
 | 1 | Unexpected error (e.g. invalid YAML on analyze) |
 | 2 | Missing `.ai/project.yaml` (`analyze`) |
 | 3 | `.ai/project.yaml` already exists (`init` without `--force`) |
+| 4 | Agent prepare/invoke failed (missing agent, artifact exists, no API key, etc.) |
 
 ## Tests
 

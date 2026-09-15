@@ -2,7 +2,7 @@
 
 Agentes e workflows executados **manualmente** no **Cursor**, **Claude Code** ou outro host com acesso ao repo.
 
-Documentação do produto: [doc.md](../doc.md) · **Phase 0 concluída:** [PHASE-0.md](PHASE-0.md)
+Documentação do produto: [doc.md](../doc.md) · [PHASE-0.md](PHASE-0.md) · [PHASE-2.md](PHASE-2.md) (CLI runtime)
 
 ## Começar
 
