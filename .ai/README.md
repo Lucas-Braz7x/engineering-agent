@@ -27,6 +27,12 @@ Documentação do produto: [doc.md](../doc.md) · [PHASE-0.md](PHASE-0.md) · [P
 | Tester | [agents/tester.md](agents/tester.md) | `workspace/test-plan.md` |
 | Reviewer | [agents/reviewer.md](agents/reviewer.md) | `workspace/code-review.md` |
 
+## Skills
+
+| Skill | Path |
+|-------|------|
+| Agent Builder | [skills/agent-builder/SKILL.md](skills/agent-builder/SKILL.md) |
+
 ## Rules
 
 | Rule | Path |
