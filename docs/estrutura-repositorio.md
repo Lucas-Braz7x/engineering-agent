@@ -11,13 +11,20 @@ engineering-agent-system/
 │   │   ├── architect.md
 │   │   ├── reviewer.md
 │   │   └── tester.md
-│   ├── skills/
+│   ├── hosts/           # Cursor, Claude Code — prompts e guias
+│   │   ├── prompts.md
+│   │   ├── cursor.md
+│   │   └── claude-code.md
+Curti │   ├── skills/
 │   │   └── general/
 │   ├── rules/
 │   │   ├── architecture.md
 │   │   └── coding.md
 │   └── workflows/
 │       └── feature.md
+├── .cursor/rules/
+│   └── eas.mdc          # bootstrap Cursor
+├── CLAUDE.md            # bootstrap Claude Code
 ├── src/
 │   └── eas/
 │       ├── agents/
