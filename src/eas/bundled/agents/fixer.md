@@ -4,6 +4,8 @@
 id: fixer
 version: 0.1.0
 phase: 5
+role: fixer
+review_peer: reviewer
 artifact_path: .ai/workspace/fix-plan.md
 ```
 

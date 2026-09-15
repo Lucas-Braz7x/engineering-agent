@@ -86,7 +86,13 @@ def test_invoke_writes_artifact(monkeypatch, tmp_path: Path):
     _seed_eas(tmp_path)
 
     def fake_complete(*, system: str, user: str, model: str | None = None) -> str:
-        return "# Artifact\n\n```yaml\nagent: architect\n```\n"
+        return (
+            "# Artifact\n\n```yaml\n"
+            "agent: architect\n"
+            "status: draft\n"
+            "risk_level: low\n"
+            "```\n"
+        )
 
     monkeypatch.setattr("eas.runtime.invoke.complete_agent", fake_complete)
 

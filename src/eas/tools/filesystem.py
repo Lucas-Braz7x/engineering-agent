@@ -5,7 +5,12 @@ from pathlib import Path
 
 from eas.tools.errors import ToolError
 from eas.tools.models import ToolContext, ToolResult
-from eas.tools.policy import assert_writable, resolve_repo_path, should_skip_dir
+from eas.tools.policy import (
+    assert_artifact_write_path,
+    assert_writable,
+    resolve_repo_path,
+    should_skip_dir,
+)
 
 DEFAULT_SEARCH_MAX = 50
 MAX_READ_BYTES = 512_000
@@ -56,6 +61,32 @@ def write_file(ctx: ToolContext, *, path: str, content: str) -> ToolResult:
         return ToolResult(ok=False, output="", error=str(exc))
 
     return ToolResult(ok=True, output=f"Wrote {len(content.encode('utf-8'))} bytes to {path}")
+
+
+def write_artifact(
+    ctx: ToolContext,
+    *,
+    path: str,
+    content: str,
+    artifact_path: str,
+) -> ToolResult:
+    try:
+        assert_artifact_write_path(path, artifact_path)
+        target = resolve_repo_path(ctx.root, path)
+        assert_writable(target, ctx.root)
+    except Exception as exc:
+        return ToolResult(ok=False, output="", error=str(exc))
+
+    try:
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(content, encoding="utf-8")
+    except OSError as exc:
+        return ToolResult(ok=False, output="", error=str(exc))
+
+    return ToolResult(
+        ok=True,
+        output=f"Wrote artifact ({len(content.encode('utf-8'))} bytes) to {path}",
+    )
 
 
 def search_code(

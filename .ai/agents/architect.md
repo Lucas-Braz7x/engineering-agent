@@ -4,6 +4,8 @@
 id: architect
 version: 0.1.0
 phase: 0
+role: architect
+review_peer: reviewer
 artifact_path: .ai/workspace/architecture.md
 ```
 

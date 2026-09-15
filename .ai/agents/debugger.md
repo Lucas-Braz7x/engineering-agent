@@ -4,6 +4,8 @@
 id: debugger
 version: 0.1.0
 phase: 0
+role: debugger
+review_peer: fixer
 artifact_path: .ai/workspace/debug-report.md
 ```
 

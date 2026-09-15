@@ -7,6 +7,7 @@ import yaml
 
 from eas.bundled_paths import bundled_root
 from eas.runtime.models import AgentManifest
+from eas.runtime.roles import merge_allowed_tools, policy_for_agent
 
 
 class AgentLoadError(Exception):
@@ -60,10 +61,36 @@ def load_agent(root: Path, agent_id: str) -> AgentManifest:
         if not data.get(key):
             raise AgentLoadError(f"Agent manifest missing {key!r} in {path}")
 
+    agent_id = str(data["id"])
+    try:
+        role_policy = policy_for_agent(agent_id)
+    except KeyError as exc:
+        raise AgentLoadError(str(exc)) from exc
+
+    manifest_tools = data.get("allowed_tools")
+    if manifest_tools is not None and not isinstance(manifest_tools, list):
+        raise AgentLoadError(f"allowed_tools must be a list in {path}")
+    try:
+        allowed = merge_allowed_tools(
+            agent_id,
+            manifest_tools if manifest_tools else None,
+        )
+    except ValueError as exc:
+        raise AgentLoadError(str(exc)) from exc
+
+    review_peer = data.get("review_peer", role_policy.review_peer)
+    if review_peer is not None:
+        review_peer = str(review_peer)
+
     return AgentManifest(
-        id=str(data["id"]),
+        id=agent_id,
         version=str(data.get("version", "0.0.0")),
         artifact_path=str(data["artifact_path"]),
         definition_path=path,
         definition_text=text,
+        role_id=str(data.get("role", role_policy.role_id)),
+        allowed_tools=allowed,
+        review_peer=review_peer,
+        required_sections=role_policy.required_sections,
+        required_yaml_keys=role_policy.required_yaml_keys,
     )

@@ -2,7 +2,8 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
-from eas.tools.filesystem import read_file, search_code, write_file
+from eas.runtime.models import AgentManifest
+from eas.tools.filesystem import read_file, search_code, write_artifact, write_file
 from eas.tools.git_tools import git_diff, git_log, git_status
 from eas.tools.models import ToolContext, ToolResult
 from eas.tools.shell import run_command
@@ -18,6 +19,7 @@ ToolFn = Callable[[ToolContext], ToolResult]
 TOOL_CATALOG: dict[str, str] = {
     "read_file": "Read a UTF-8 text file under the repository root",
     "write_file": "Write a UTF-8 text file (blocked under .git)",
+    "write_artifact": "Write EAS workspace artifact only (role-gated)",
     "search_code": "Regex search across files (skips .git, node_modules, venv)",
     "run_command": "Run a shell-free command with cwd = repo root",
     "run_tests": "Run testing.command from .ai/project.yaml",
@@ -38,11 +40,42 @@ def list_tools() -> list[tuple[str, str]]:
     return sorted(TOOL_CATALOG.items())
 
 
-def execute(ctx: ToolContext, name: str, **kwargs) -> ToolResult:
+def execute(
+    ctx: ToolContext,
+    name: str,
+    *,
+    agent: AgentManifest | None = None,
+    **kwargs,
+) -> ToolResult:
+    if agent is not None and name not in agent.allowed_tools:
+        allowed = ", ".join(sorted(agent.allowed_tools))
+        return ToolResult(
+            ok=False,
+            output="",
+            error=(
+                f"Tool {name!r} not allowed for agent {agent.id!r}. "
+                f"Allowed: {allowed}"
+            ),
+        )
+
     if name == "read_file":
         return read_file(ctx, path=kwargs["path"])
     if name == "write_file":
         return write_file(ctx, path=kwargs["path"], content=kwargs["content"])
+    if name == "write_artifact":
+        if agent is None:
+            return ToolResult(
+                ok=False,
+                output="",
+                error="write_artifact requires --agent (role context)",
+            )
+        target = kwargs.get("path") or agent.artifact_path
+        return write_artifact(
+            ctx,
+            path=target,
+            content=kwargs["content"],
+            artifact_path=agent.artifact_path,
+        )
     if name == "search_code":
         return search_code(
             ctx,

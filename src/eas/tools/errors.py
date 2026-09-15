@@ -4,3 +4,7 @@ class ToolError(Exception):
 
 class ToolPolicyError(ToolError):
     """Path or command blocked by safety policy."""
+
+
+class ToolRoleError(ToolPolicyError):
+    """Tool blocked by agent role policy."""

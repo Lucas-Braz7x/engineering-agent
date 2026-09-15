@@ -4,6 +4,8 @@
 id: reviewer
 version: 0.1.0
 phase: 0
+role: reviewer
+review_peer: architect
 artifact_path: .ai/workspace/code-review.md
 ```
 

@@ -4,6 +4,8 @@
 id: tester
 version: 0.1.0
 phase: 0
+role: tester
+review_peer: reviewer
 artifact_path: .ai/workspace/test-plan.md
 ```
 

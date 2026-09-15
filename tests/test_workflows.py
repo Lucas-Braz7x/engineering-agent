@@ -58,7 +58,7 @@ def test_feature_invoke_tester_with_assume_approved(tmp_path: Path, monkeypatch)
     _seed(tmp_path)
 
     def fake_complete(*, system: str, user: str, model: str | None = None) -> str:
-        return "# test plan\n```yaml\nagent: tester\n```\n"
+        return "# test plan\n```yaml\nagent: tester\nstatus: draft\n```\n"
 
     monkeypatch.setattr("eas.runtime.invoke.complete_agent", fake_complete)
 
