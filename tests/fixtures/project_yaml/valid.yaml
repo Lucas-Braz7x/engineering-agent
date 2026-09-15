@@ -1,0 +1,21 @@
+project:
+  name: file-uploader
+
+language:
+  name: typescript
+  version: "22"
+
+framework:
+  name: nestjs
+
+package_manager:
+  name: pnpm
+
+database:
+  name: postgresql
+
+testing:
+  command: pnpm test
+
+build:
+  command: pnpm build
