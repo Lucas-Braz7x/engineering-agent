@@ -1,15 +1,14 @@
 from __future__ import annotations
 
-from typing import Optional
-
 import typer
 
 from eas import __version__
 from eas.commands.analyze import analyze
+from eas.commands.init import init
 
 app = typer.Typer(
     name="engineering-agent",
-    help="Engineering Agent System — Phase 0 CLI.",
+    help="Engineering Agent System CLI.",
     no_args_is_help=True,
 )
 
@@ -22,7 +21,7 @@ def _version_callback(value: bool) -> None:
 
 @app.callback()
 def main(
-    version: Optional[bool] = typer.Option(
+    version: bool | None = typer.Option(
         None,
         "--version",
         callback=_version_callback,
@@ -33,4 +32,5 @@ def main(
     """Engineering Agent System CLI."""
 
 
+app.command("init")(init)
 app.command("analyze")(analyze)

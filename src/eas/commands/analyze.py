@@ -26,7 +26,7 @@ def run_analyze(*, start_path: Path, write_draft: bool) -> int:
             missing = paths.project_yaml
         typer.secho(f"Missing {missing}.", err=True)
         typer.secho(
-            "'engineering-agent init' is not implemented yet — create .ai/project.yaml manually or copy from docs/contexto-do-projeto.md.",
+            "Run 'engineering-agent init' to generate .ai/project.yaml, or create it manually (see docs/contexto-do-projeto.md).",
             err=True,
         )
         return EXIT_MISSING_CONFIG
