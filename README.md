@@ -1,6 +1,6 @@
 # Engineering Agent System
 
-Phase 0: agents and workflows live in `.ai/` as Markdown. This package adds a minimal **CLI** that loads project context and prepares analysis — it does **not** call an LLM or replace the architect agent.
+Agents and workflows live in `.ai/` as Markdown. The **CLI** detects project context (`init`), loads it (`analyze`), and prepares analysis — it does **not** call an LLM or replace the architect agent.
 
 ## Requirements
 
@@ -58,9 +58,12 @@ If you used `uv pip install` above, this step is already done.
 From the repository root (or any subdirectory under a repo that contains `.ai/`):
 
 ```bash
+engineering-agent init                      # detect stack → .ai/project.yaml
+engineering-agent init --dry-run            # preview detection only
+engineering-agent init --force              # overwrite existing project.yaml
 engineering-agent analyze
 engineering-agent analyze --path /path/to/repo
-engineering-agent analyze --write-draft   # minimal architecture.md if missing
+engineering-agent analyze --write-draft     # minimal architecture.md if missing
 engineering-agent --version
 ```
 
@@ -72,15 +75,30 @@ To produce a full architecture document, invoke the **architect** agent in Curso
 
 The CLI reads [`.ai/project.yaml`](.ai/project.yaml) when present. Supported fields mirror [docs/contexto-do-projeto.md](docs/contexto-do-projeto.md) (`project`, `language`, `framework`, `package_manager`, `database`, `testing`, `build`).
 
-If the file is missing, the command exits with code **2** and hints that `engineering-agent init` is not implemented yet.
+If the file is missing, run `engineering-agent init` or exit code **2**.
+
+`init` detects stack from root manifests:
+
+| Manifest | Stack |
+|----------|--------|
+| `pyproject.toml` | Python |
+| `package.json` | Node / TypeScript |
+| `go.mod` | Go |
+| `Cargo.toml` | Rust |
+| `pom.xml` / `build.gradle(.kts)` | Java / Kotlin (Maven / Gradle) |
+
+**Monorepo (1.1):** multiple manifests at the repo root merge **signals** in the output; the **primary** stack in `project.yaml` follows priority (Python → Node → Go → Rust → Java). Optional metadata: `detection.monorepo` and `detection.manifests`.
+
+Also detects Git, Docker, and databases from `docker-compose.yml`.
 
 ## Exit codes
 
 | Code | Meaning |
 |------|---------|
 | 0 | Success |
-| 1 | Unexpected error (e.g. invalid YAML) |
-| 2 | Missing `.ai/project.yaml` |
+| 1 | Unexpected error (e.g. invalid YAML on analyze) |
+| 2 | Missing `.ai/project.yaml` (`analyze`) |
+| 3 | `.ai/project.yaml` already exists (`init` without `--force`) |
 
 ## Tests
 
