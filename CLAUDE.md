@@ -8,7 +8,7 @@ This repository uses **`.ai/`** for agents, workflows, rules, and workspace arti
 2. Follow `.ai/workflows/feature.md`
 3. Use prompts from `.ai/hosts/prompts.md` (same text as Cursor)
 
-## When I ask for EAS / architect / reviewer / feature workflow
+## When I ask for EAS / architect / tester / reviewer / feature workflow
 
 - Read the agent definition in `.ai/agents/<name>.md` and obey it completely
 - Read inputs listed in that file (requirement, `project.yaml`, `rules/`, repo as needed)

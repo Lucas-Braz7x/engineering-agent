@@ -5,7 +5,7 @@ alwaysApply: true
 
 # EAS (Engineering Agent System)
 
-When the user runs an EAS workflow or names an agent (architect, reviewer, feature, etc.):
+When the user runs an EAS workflow or names an agent (architect, tester, reviewer, feature, etc.):
 
 1. Treat `.ai/agents/<id>.md` as the authoritative agent contract
 2. Follow `.ai/workflows/*.md` when a workflow is requested
