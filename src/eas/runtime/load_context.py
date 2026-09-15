@@ -6,6 +6,9 @@ from eas.bundled_paths import bundled_root
 from eas.context.loader import ProjectConfig, load_project_config
 from eas.context.paths import workspace_paths
 from eas.runtime.models import ContextFile, EASContext
+from eas.store.connection import open_store_optional
+from eas.store.memory_service import active_memories_for_context
+from eas.store.repository import ensure_project
 
 
 def _read_text(path: Path) -> str:
@@ -41,6 +44,18 @@ def load_eas_context(root: Path, *, config: ProjectConfig | None = None) -> EASC
     if paths.requirement_md.is_file():
         requirement_text = _read_text(paths.requirement_md)
 
+    memories: tuple[ContextFile, ...] = ()
+    store = open_store_optional(root)
+    if store is not None:
+        try:
+            with store.transaction():
+                pid = ensure_project(store, name=config.project_name)
+            memories = active_memories_for_context(store, pid)
+        except Exception:
+            memories = ()
+        finally:
+            store.close()
+
     return EASContext(
         root=root,
         paths=paths,
@@ -48,4 +63,5 @@ def load_eas_context(root: Path, *, config: ProjectConfig | None = None) -> EASC
         rules=rules,
         skills=skills,
         requirement_text=requirement_text,
+        memories=memories,
     )

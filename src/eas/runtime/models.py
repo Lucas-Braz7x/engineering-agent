@@ -21,6 +21,7 @@ class EASContext:
     rules: tuple[ContextFile, ...]
     skills: tuple[ContextFile, ...]
     requirement_text: str | None
+    memories: tuple[ContextFile, ...]
 
 
 @dataclass(frozen=True)
@@ -30,6 +31,11 @@ class AgentManifest:
     artifact_path: str
     definition_path: Path
     definition_text: str
+    role_id: str
+    allowed_tools: frozenset[str]
+    review_peer: str | None
+    required_sections: tuple[str, ...]
+    required_yaml_keys: tuple[str, ...]
 
 
 @dataclass(frozen=True)

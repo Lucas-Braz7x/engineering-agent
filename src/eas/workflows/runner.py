@@ -11,6 +11,7 @@ from eas.runtime.models import InvokeResult, PrepareResult
 from eas.workflows.approval import approval_hint, architecture_approved
 from eas.workflows.context_bundle import gather_git_context, read_bug_report, write_bug_report
 from eas.workflows.specs import WORKFLOWS, WorkflowSpec
+from eas.store.recording import begin_session, task_scope
 
 
 class WorkflowError(Exception):
@@ -114,31 +115,33 @@ def run_workflow_invoke(
     if spec is None:
         raise WorkflowError(f"Unknown workflow: {workflow_id}")
 
-    load_eas_context(root)  # validate context loads
+    ctx = load_eas_context(root)
+    session = begin_session(root, project_name=ctx.config.project_name)
     steps = _resolve_steps(spec, step, run_all)
     invoked: list[InvokeResult] = []
 
-    for agent_id in steps:
-        _gate_approval(spec, agent_id, root, assume_approved)
-        config = load_eas_context(root).config
-        extras = _extra_sections_for_agent(
-            root,
-            agent_id,
-            config=config,
-            git_base=git_base,
-            git_head=git_head,
-            with_tests=with_tests,
-        )
-        try:
-            result = run_invoke(
-                root=root,
-                agent_id=agent_id,
-                force=force,
-                extra_sections=extras,
+    with task_scope(session, kind=f"workflow:{workflow_id}", title=workflow_id):
+        for agent_id in steps:
+            _gate_approval(spec, agent_id, root, assume_approved)
+            config = load_eas_context(root).config
+            extras = _extra_sections_for_agent(
+                root,
+                agent_id,
+                config=config,
+                git_base=git_base,
+                git_head=git_head,
+                with_tests=with_tests,
             )
-        except InvokeError as exc:
-            raise WorkflowError(str(exc)) from exc
-        invoked.append(result)
+            try:
+                result = run_invoke(
+                    root=root,
+                    agent_id=agent_id,
+                    force=force,
+                    extra_sections=extras,
+                )
+            except InvokeError as exc:
+                raise WorkflowError(str(exc)) from exc
+            invoked.append(result)
 
     return WorkflowRunSummary(workflow_id=workflow_id, prepared=(), invoked=tuple(invoked))
 

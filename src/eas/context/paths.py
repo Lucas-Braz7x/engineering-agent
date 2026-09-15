@@ -10,6 +10,8 @@ class WorkspacePaths:
     project_yaml: Path
     requirement_md: Path
     architecture_md: Path
+    eas_dir: Path
+    eas_db: Path
 
 
 def find_repo_root(start: Path) -> Path:
@@ -24,9 +26,12 @@ def find_repo_root(start: Path) -> Path:
 def workspace_paths(root: Path) -> WorkspacePaths:
     ai = root / ".ai"
     workspace = ai / "workspace"
+    eas = root / ".eas"
     return WorkspacePaths(
         root=root,
         project_yaml=ai / "project.yaml",
         requirement_md=workspace / "requirement.md",
         architecture_md=workspace / "architecture.md",
+        eas_dir=eas,
+        eas_db=eas / "eas.db",
     )

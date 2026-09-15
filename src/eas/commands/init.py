@@ -7,6 +7,7 @@ import typer
 from eas.context.project_yaml import write_project_yaml
 from eas.detection.detect import detect_project
 from eas.detection.project_root import find_project_root
+from eas.store.connection import ensure_eas_dir, open_store_optional
 
 EXIT_OK = 0
 EXIT_ERROR = 1
@@ -51,6 +52,9 @@ def run_init(
         return EXIT_OK
 
     write_project_yaml(project_yaml, result)
+    ensure_eas_dir(root)
+    if open_store_optional(root) is not None:
+        typer.echo(f"Context store ready: {(root / '.eas' / 'eas.db').relative_to(root)}")
     typer.echo(f"\nProject context generated: {rel_yaml}")
     return EXIT_OK
 

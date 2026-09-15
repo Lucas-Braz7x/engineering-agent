@@ -5,6 +5,7 @@ from pathlib import Path
 import yaml
 
 from eas.runtime.models import AgentManifest, EASContext
+from eas.runtime.roles import TOOL_ALIASES, denied_tools_for_policy, policy_for_agent
 from eas.tools.registry import list_tools
 
 
@@ -65,6 +66,10 @@ def build_invoke_prompt(*, context: EASContext, agent: AgentManifest) -> str:
         "",
         _section_files("Rules (.ai/rules)", context.rules),
         _section_files("Skills (.ai/skills)", context.skills),
+        _section_files(
+            "Project memories (.eas — active only, curated)",
+            context.memories,
+        ),
         "## project.yaml (raw)",
         "",
         "```yaml",
@@ -75,19 +80,37 @@ def build_invoke_prompt(*, context: EASContext, agent: AgentManifest) -> str:
         "",
         agent.definition_text.rstrip(),
         "",
-        "## Tools (Phase 3 CLI)",
+        "## Role boundaries (code-enforced)",
         "",
-        "The human or automated runtime can gather repo context with:",
+        "Behavior is not prompt-only: the CLI blocks tools outside this agent's policy.",
+        f"- **Role:** `{agent.role_id}`",
+        f"- **Review peer:** `{agent.review_peer or 'none'}`",
+        f"- **Artifact path:** `{agent.artifact_path}`",
+        "",
+        "**Allowed tools:**",
+        "",
+        "\n".join(f"- `{name}`" for name in sorted(agent.allowed_tools)),
+        "",
+        "**Denied (examples):**",
+        "",
+        "\n".join(
+            f"- `{name}`"
+            for name in sorted(denied_tools_for_policy(policy_for_agent(agent.id)))[:12]
+        ),
+        "(see full catalog below)",
+        "",
+        "Aliases blocked when the underlying tool is denied:",
+        "",
+        "\n".join(f"- `{alias}` → `{target}`" for alias, target in TOOL_ALIASES.items()),
+        "",
+        "Use tools with `--agent` so policy is enforced, e.g.",
         "",
         "```bash",
-        "engineering-agent tools list",
-        "engineering-agent tools read-file <path>",
-        "engineering-agent tools search-code '<regex>'",
-        "engineering-agent tools git-diff --base main --head HEAD",
-        "engineering-agent tools run-tests",
+        f"engineering-agent tools read-file README.md --agent {agent.id}",
+        f"engineering-agent tools write-artifact --agent {agent.id} --content '...'",
         "```",
         "",
-        "Registered:",
+        "## Tools catalog (all registered)",
         "",
         "\n".join(f"- `{name}` — {desc}" for name, desc in list_tools()),
         "",

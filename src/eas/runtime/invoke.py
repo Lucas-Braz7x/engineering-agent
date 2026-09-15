@@ -8,6 +8,13 @@ from eas.runtime.load_agent import load_agent
 from eas.runtime.load_context import load_eas_context
 from eas.runtime.models import AgentManifest, EASContext, InvokeResult, PrepareResult
 from eas.runtime.prepare import prepare_agent_run
+from eas.runtime.validate_artifact import validate_artifact
+from eas.store.recording import (
+    begin_session,
+    record_invoke_failed,
+    record_invoke_start,
+    record_invoke_success,
+)
 
 
 def _artifact_exists(path: Path) -> bool:
@@ -35,6 +42,8 @@ def run_invoke(
 ) -> InvokeResult:
     prepared = run_prepare(root=root, agent_id=agent_id, run_id=run_id)
     agent = load_agent(root, agent_id)
+    context = load_eas_context(root)
+    session = begin_session(root, project_name=context.config.project_name)
 
     artifact_path = prepared.artifact_path
     if _artifact_exists(artifact_path) and not force:
@@ -49,10 +58,43 @@ def run_invoke(
         f"You are the EAS {agent.id} agent. Output only the artifact markdown "
         f"(with eas-artifact YAML footer). No preamble."
     )
-    output = complete_agent(system=system, user=prompt)
+    try:
+        artifact_rel = artifact_path.relative_to(root).as_posix()
+    except ValueError:
+        artifact_rel = str(artifact_path)
+    record_invoke_start(
+        session,
+        run_id=prepared.run_id,
+        agent_id=agent.id,
+        system=system,
+        user_prompt=prompt,
+        artifact_path=artifact_rel,
+    )
+
+    try:
+        output = complete_agent(system=system, user=prompt)
+    except InvokeError as exc:
+        record_invoke_failed(session, prepared.run_id, str(exc))
+        raise
+
+    validation_errors = validate_artifact(output, agent)
+    if validation_errors:
+        msg = "Artifact validation failed:\n- " + "\n- ".join(validation_errors)
+        record_invoke_failed(session, prepared.run_id, msg)
+        raise InvokeError(msg)
 
     artifact_path.parent.mkdir(parents=True, exist_ok=True)
     artifact_path.write_text(output, encoding="utf-8")
+
+    record_invoke_success(
+        session,
+        run_id=prepared.run_id,
+        agent_id=agent.id,
+        output=output,
+        artifact_rel=artifact_rel,
+        artifact_file=artifact_path,
+        root=root,
+    )
 
     return InvokeResult(
         run_id=prepared.run_id,
