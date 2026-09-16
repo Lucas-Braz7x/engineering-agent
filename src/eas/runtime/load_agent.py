@@ -14,7 +14,9 @@ class AgentLoadError(Exception):
     pass
 
 
-_ALLOWED_AGENTS = frozenset({"architect", "tester", "reviewer", "debugger", "fixer"})
+_ALLOWED_AGENTS = frozenset(
+    {"architect", "tester", "reviewer", "debugger", "fixer", "documenter"}
+)
 
 
 def _candidate_agent_paths(root: Path, agent_id: str) -> tuple[Path, ...]:

@@ -14,21 +14,21 @@ class WorkflowSpec:
 # Aligned with .ai/workflows/feature.md (Phase 0 scope: no Coder/Challenger in CLI).
 WORKFLOW_FEATURE = WorkflowSpec(
     id="feature",
-    description="Requirement → architect → (approval) → tester → reviewer",
-    steps=("architect", "tester", "reviewer"),
+    description="Requirement → architect → (approval) → tester → reviewer → documenter",
+    steps=("architect", "tester", "reviewer", "documenter"),
     requires_approval_before=frozenset({"tester", "reviewer"}),
 )
 
 WORKFLOW_REVIEW = WorkflowSpec(
     id="review",
-    description="Git context → reviewer → code-review.md",
-    steps=("reviewer",),
+    description="Git context → reviewer → documenter",
+    steps=("reviewer", "documenter"),
 )
 
 WORKFLOW_BUG = WorkflowSpec(
     id="bug",
-    description="Bug report → debugger → (fix manual) → tester → reviewer",
-    steps=("debugger", "tester", "reviewer"),
+    description="Bug report → debugger → (fix manual) → tester → reviewer → documenter",
+    steps=("debugger", "tester", "reviewer", "documenter"),
     requires_approval_before=frozenset({"tester", "reviewer"}),
 )
 

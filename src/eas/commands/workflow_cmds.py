@@ -26,7 +26,7 @@ def _common_options(
     step: str | None = typer.Option(
         None,
         "--step",
-        help="Agent step: architect, tester, reviewer, debugger",
+        help="Agent step: architect, tester, reviewer, documenter, debugger",
     ),
     all_steps: bool = typer.Option(False, "--all", help="All workflow steps"),
     force: bool = typer.Option(False, "--force"),
@@ -114,7 +114,7 @@ def feature(
         help="Optional short requirement title (does not replace requirement.md)",
     ),
 ) -> None:
-    """Feature workflow: architect → tester → reviewer (see .ai/workflows/feature.md)."""
+    """Feature workflow: architect → tester → reviewer → documenter (see .ai/workflows/feature.md)."""
     root = resolve_root(path)
     if requirement:
         req_path = root / ".ai" / "workspace" / "requirement.md"
@@ -149,25 +149,25 @@ def review(
     path: Path = typer.Option(Path("."), "--path", exists=True, file_okay=False, dir_okay=True),
     prepare: bool = typer.Option(False, "--prepare"),
     invoke: bool = typer.Option(False, "--invoke"),
+    step: str | None = typer.Option(None, "--step"),
+    all_steps: bool = typer.Option(False, "--all", help="Reviewer and documenter"),
     force: bool = typer.Option(False, "--force"),
     git_base: str | None = typer.Option("main", "--git-base"),
     git_head: str | None = typer.Option("HEAD", "--git-head"),
     with_tests: bool = typer.Option(False, "--with-tests"),
 ) -> None:
-    """Review workflow: reviewer with git diff context."""
+    """Review workflow: reviewer → documenter with git diff context."""
     opts = _common_options(
         path=path,
         prepare=prepare,
         invoke=invoke,
-        step="reviewer",
-        all_steps=False,
+        step=step,
+        all_steps=all_steps,
         force=force,
         git_base=git_base,
         git_head=git_head,
         with_tests=with_tests,
     )
-    if invoke and not prepare:
-        opts["step"] = "reviewer"
     raise typer.Exit(_run_workflow_cli("review", opts))
 
 
@@ -188,7 +188,7 @@ def bug(
     git_head: str | None = typer.Option(None, "--git-head"),
     with_tests: bool = typer.Option(False, "--with-tests"),
 ) -> None:
-    """Bug workflow: debugger → tester → reviewer."""
+    """Bug workflow: debugger → tester → reviewer → documenter."""
     root = resolve_root(path)
     if description:
         write_bug_report(root, description)
@@ -221,6 +221,7 @@ def status(
         "approval.md",
         "test-plan.md",
         "code-review.md",
+        "documentation-report.md",
         "debug-report.md",
         "bug-report.md",
         "fix-plan.md",

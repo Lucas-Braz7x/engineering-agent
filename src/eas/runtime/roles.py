@@ -136,6 +136,29 @@ AGENT_ROLE_POLICIES: dict[str, AgentRolePolicy] = {
         required_sections=("Summary", "Proposed changes", "Verification"),
         required_yaml_keys=("agent", "status"),
     ),
+    "documenter": AgentRolePolicy(
+        role_id="documenter",
+        summary="Product docs and ADRs — no source or CI edits",
+        allowed_tools=frozenset(
+            {
+                "read_file",
+                "search_code",
+                "write_file",
+                "write_artifact",
+                "git_diff",
+                "git_status",
+                "git_log",
+            }
+        ),
+        review_peer="reviewer",
+        required_sections=(
+            "Summary",
+            "Scope and inputs used",
+            "Documentation changes",
+            "ADRs",
+        ),
+        required_yaml_keys=("agent", "status"),
+    ),
 }
 
 
