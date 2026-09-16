@@ -15,6 +15,7 @@ Um **Agent** representa uma responsabilidade de engenharia.
 | Tester     | Estratégia e cobertura de testes             |
 | Security   | Riscos de segurança                          |
 | Challenger | Contestar decisões (evitar overengineering)  |
+| Documenter | Documentação de produto e ADRs após workflows   |
 
 ## Architect
 
@@ -145,3 +146,15 @@ flowchart TD
 ```
 
 **Artefato:** `.ai/workspace/debug-report.md`
+
+## Documenter
+
+Responsável por sincronizar **documentação do produto** (`docs/`, `README.md`, `doc.md`) com artefatos EAS e mudanças no código, e por registrar **ADRs** em `docs/adr/` quando houver decisões duráveis.
+
+**Entrada:** artefatos em `.ai/workspace/` do workflow (ou escopo livre em invocação isolada), diff git, rules em `.ai/rules/documentation.md`.
+
+**Não deve:** alterar código em `src/`, testes ou pipelines de CI.
+
+**Artefato:** `.ai/workspace/documentation-report.md`
+
+**Workflow:** passo final após Reviewer em feature, bug e review.

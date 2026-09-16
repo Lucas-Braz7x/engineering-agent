@@ -26,6 +26,7 @@ Documentação do produto: [doc.md](../doc.md) · [PHASE-0.md](PHASE-0.md) · [P
 | Architect | [agents/architect.md](agents/architect.md) | `workspace/architecture.md` |
 | Tester | [agents/tester.md](agents/tester.md) | `workspace/test-plan.md` |
 | Reviewer | [agents/reviewer.md](agents/reviewer.md) | `workspace/code-review.md` |
+| Documenter | [agents/documenter.md](agents/documenter.md) | `workspace/documentation-report.md` |
 
 ## Skills
 
@@ -40,5 +41,6 @@ Documentação do produto: [doc.md](../doc.md) · [PHASE-0.md](PHASE-0.md) · [P
 | Architecture | [rules/architecture.md](rules/architecture.md) |
 | Coding | [rules/coding.md](rules/coding.md) |
 | Testing | [rules/testing.md](rules/testing.md) |
+| Documentation | [rules/documentation.md](rules/documentation.md) |
 
 Definições de agente são **agnósticas de IDE**; hosts só mudam como anexar contexto.

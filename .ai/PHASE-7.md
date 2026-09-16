@@ -37,6 +37,7 @@ Sem `--agent`, as tools continuam disponíveis (modo humano/IDE). Com `--agent`,
 | tester | read, search, diff, tests, write_artifact | write_file |
 | debugger | + run_command | write_file |
 | fixer | read, diff, tests, write_artifact | write_file |
+| documenter | read, search, write_file, write_artifact, git diff/log | run_command, run_tests |
 | coder (perfil) | write_file, tests, diff | write_artifact |
 
 `write_artifact` só grava no `artifact_path` do agente ou em `.ai/workspace/runs/**/*.md`.

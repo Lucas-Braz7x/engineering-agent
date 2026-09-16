@@ -64,6 +64,7 @@ engineering-agent init --force              # overwrite existing project.yaml
 engineering-agent analyze
 engineering-agent analyze --agent architect --prepare   # Phase 2: bundle em .ai/workspace/runs/
 engineering-agent analyze --agent architect --invoke    # Phase 2: LLM → artefato (ver abaixo)
+engineering-agent analyze --agent documenter --prepare  # documentação / ADRs (standalone)
 engineering-agent analyze --path /path/to/repo
 engineering-agent analyze --write-draft     # minimal architecture.md if missing
 engineering-agent --version

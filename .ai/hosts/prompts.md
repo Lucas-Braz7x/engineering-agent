@@ -48,6 +48,25 @@ Do not implement test code unless I explicitly ask after the plan is saved.
 
 ---
 
+## documenter
+
+```text
+You are running the EAS agent "documenter". Follow every instruction in .ai/agents/documenter.md.
+
+Scope:
+<workflow closure (feature/bug/review) OR describe what to document — module, ADR topic, sync with diff, etc.>
+
+Before answering:
+- Read .ai/rules/documentation.md if it exists
+- Read relevant .ai/workspace/*.md artifacts and docs/ as needed
+- Use git diff when reviewing implemented changes
+
+Update product documentation under docs/ (and docs/adr/ for significant decisions).
+Deliver the full artifact and write it to .ai/workspace/documentation-report.md (include the eas-artifact YAML block at the end).
+```
+
+---
+
 ## feature (workflow Phase 0)
 
 ```text
@@ -58,4 +77,5 @@ We are executing .ai/workflows/feature.md (Phase 0, manual mode).
 3) Stop and ask for my explicit approval before any implementation.
 4) After I implement and notify you, run the tester agent (.ai/agents/tester.md) on the current diff and save .ai/workspace/test-plan.md.
 5) Run the reviewer agent (.ai/agents/reviewer.md) on the current diff; use test-plan.md for testing coverage; save .ai/workspace/code-review.md.
+6) Run the documenter agent (.ai/agents/documenter.md); update docs/ and docs/adr/ as needed; save .ai/workspace/documentation-report.md.
 ```

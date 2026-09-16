@@ -6,9 +6,9 @@ Critério do [roadmap](../docs/roadmap.md): comandos `feature`, `bug`, `review`.
 
 | Comando | Workflow | Agentes |
 |---------|----------|---------|
-| `engineering-agent feature` | feature | architect → tester → reviewer |
-| `engineering-agent review` | review | reviewer (+ git diff) |
-| `engineering-agent bug` | bug | debugger → tester → reviewer |
+| `engineering-agent feature` | feature | architect → tester → reviewer → documenter |
+| `engineering-agent review` | review | reviewer → documenter (+ git diff) |
+| `engineering-agent bug` | bug | debugger → tester → reviewer → documenter |
 | `engineering-agent status` | — | lista artefatos em `.ai/workspace/` |
 
 Padrão: exatamente um de `--prepare` ou `--invoke`.

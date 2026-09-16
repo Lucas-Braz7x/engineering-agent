@@ -19,6 +19,7 @@ Incluído:
 - Implementação **fora** deste workflow (desenvolvedor ou agente genérico do IDE)
 - Tester → `test-plan.md`
 - Reviewer → `code-review.md`
+- Documenter → `documentation-report.md` + atualizações em `docs/` e `docs/adr/`
 
 Fora do escopo (fases posteriores): Challenger, Coder e Security como agentes dedicados; loops automáticos; LLM na CLI.
 
@@ -29,7 +30,8 @@ flowchart TD
   H --> I[4. Implementação manual]
   I --> T[5. Tester]
   T --> Rev[6. Reviewer]
-  Rev --> D{Status?}
+  Rev --> Doc[7. Documenter]
+  Doc --> D{Review status?}
   D -->|APPROVED| OK[Concluído]
   D -->|CHANGES_REQUESTED| I
   D -->|BLOCKED| P[Replan / Architect]
@@ -156,12 +158,34 @@ Opcional: implementar testes do plano antes do Reviewer (ainda sem agente Coder 
 
 **Saída:** `.ai/workspace/code-review.md`
 
-## Passo 7 — Encerramento
+## Passo 7 — Documenter
+
+**Agente:** [.ai/agents/documenter.md](../agents/documenter.md)
+
+**Contexto:**
+
+- `.ai/agents/documenter.md`
+- Artefatos em `.ai/workspace/` do workflow (requirement, architecture, test-plan, code-review)
+- Diff (`git diff main...HEAD` ou equivalente)
+- `.ai/rules/documentation.md`, `docs/`, `doc.md`, `README.md`
+- Prompt: [.ai/hosts/prompts.md#documenter](../hosts/prompts.md#documenter)
+
+**Saída:** `.ai/workspace/documentation-report.md` e, quando aplicável, arquivos em `docs/` e `docs/adr/`.
+
+**Checklist:**
+
+- [ ] Relatório lista paths criados/atualizados
+- [ ] ADRs criados só para decisões significativas (ver rules)
+- [ ] Se review `BLOCKED`, limitações descritas no relatório
+
+Também pode invocar o Documenter **isoladamente** (fora do workflow) com o mesmo prompt.
+
+## Passo 8 — Encerramento
 
 | `status` no review | Ação |
 |--------------------|------|
 | `APPROVED` | Merge / deploy conforme processo do time |
-| `CHANGES_REQUESTED` | Corrigir → repetir passos 4–6 conforme necessário |
+| `CHANGES_REQUESTED` | Corrigir → repetir passos 4–7 conforme necessário |
 | `BLOCKED` | Parar; revisar arquitetura (passo 2) ou escopo (passo 1) |
 
 ## Artefatos esperados ao final
@@ -173,7 +197,10 @@ Opcional: implementar testes do plano antes do Reviewer (ainda sem agente Coder 
 ├── approval.md          # recomendado
 ├── test-plan.md
 ├── code-review.md
+├── documentation-report.md
 └── runs/                # opcional: snapshots por data-id
+
+docs/adr/                 # ADRs criados pelo Documenter (quando aplicável)
 ```
 
 ## Prompt único (feature de ponta a ponta)
