@@ -91,6 +91,51 @@ def test_validate_artifact_strict_sections(tmp_path: Path):
     assert any("Requirements" in err for err in strict)
 
 
+def test_documenter_can_write_docs_and_artifact(tmp_path: Path):
+    root = _minimal_repo(tmp_path)
+    doc_src = Path(__file__).resolve().parents[1] / ".ai" / "agents" / "documenter.md"
+    (root / ".ai" / "agents" / "documenter.md").write_text(
+        doc_src.read_text(encoding="utf-8"),
+        encoding="utf-8",
+    )
+    agent = load_agent(root, "documenter")
+    ctx = ToolContext(root=root, config=None)
+
+    docs_write = execute(
+        ctx,
+        "write_file",
+        agent=agent,
+        path="docs/example.md",
+        content="# Example\n",
+    )
+    assert docs_write.ok
+
+    report = execute(
+        ctx,
+        "write_artifact",
+        agent=agent,
+        path=".ai/workspace/documentation-report.md",
+        content=(
+            "## Summary\n\nok\n\n## Scope and inputs used\n\nx\n\n"
+            "## Documentation changes\n\n| path | action |\n|---|---|\n"
+            "## ADRs\n\nnone\n\n```yaml\nagent: documenter\nstatus: draft\n```\n"
+        ),
+    )
+    assert report.ok
+
+
+def test_documenter_load_agent(tmp_path: Path):
+    root = _minimal_repo(tmp_path)
+    doc_src = Path(__file__).resolve().parents[1] / ".ai" / "agents" / "documenter.md"
+    (root / ".ai" / "agents" / "documenter.md").write_text(
+        doc_src.read_text(encoding="utf-8"),
+        encoding="utf-8",
+    )
+    agent = load_agent(root, "documenter")
+    assert agent.id == "documenter"
+    assert agent.artifact_path == ".ai/workspace/documentation-report.md"
+
+
 def test_tools_agent_flag_blocks_write_file(tmp_path: Path):
     root = _minimal_repo(tmp_path)
     result = runner.invoke(

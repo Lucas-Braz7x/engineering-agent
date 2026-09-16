@@ -14,7 +14,13 @@ def _seed(root: Path) -> None:
     (ai / "agents").mkdir(parents=True)
     (ai / "workspace").mkdir(parents=True)
     architect_src = Path(__file__).resolve().parents[1] / ".ai" / "agents" / "architect.md"
-    for name in ("architect.md", "tester.md", "reviewer.md", "debugger.md"):
+    for name in (
+        "architect.md",
+        "tester.md",
+        "reviewer.md",
+        "debugger.md",
+        "documenter.md",
+    ):
         src = Path(__file__).resolve().parents[1] / ".ai" / "agents" / name
         if src.is_file():
             (ai / "agents" / name).write_text(src.read_text(encoding="utf-8"), encoding="utf-8")
@@ -35,7 +41,7 @@ def test_feature_prepare_all(tmp_path: Path):
         ["feature", "--path", str(tmp_path), "--prepare", "--all"],
     )
     assert result.exit_code == 0
-    assert result.stdout.count("Prepared run") == 3
+    assert result.stdout.count("Prepared run") == 4
 
 
 def test_feature_invoke_tester_blocked_without_approval(tmp_path: Path, monkeypatch):
@@ -77,6 +83,35 @@ def test_feature_invoke_tester_with_assume_approved(tmp_path: Path, monkeypatch)
     )
     assert result.exit_code == 0
     assert (tmp_path / ".ai" / "workspace" / "test-plan.md").is_file()
+
+
+def test_feature_invoke_documenter(tmp_path: Path, monkeypatch):
+    _seed(tmp_path)
+
+    def fake_complete(*, system: str, user: str, model: str | None = None) -> str:
+        return (
+            "## Summary\n\nok\n\n## Scope and inputs used\n\nx\n\n"
+            "## Documentation changes\n\n| path | action |\n|---|---|\n"
+            "## ADRs\n\nnone\n\n```yaml\nagent: documenter\nstatus: draft\n```\n"
+        )
+
+    monkeypatch.setattr("eas.runtime.invoke.complete_agent", fake_complete)
+
+    result = runner.invoke(
+        app,
+        [
+            "feature",
+            "--path",
+            str(tmp_path),
+            "--invoke",
+            "--step",
+            "documenter",
+            "--force",
+            "--assume-approved",
+        ],
+    )
+    assert result.exit_code == 0
+    assert (tmp_path / ".ai" / "workspace" / "documentation-report.md").is_file()
 
 
 def test_review_invoke(monkeypatch, tmp_path: Path):
